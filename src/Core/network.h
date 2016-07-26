@@ -15,6 +15,8 @@
 #include "Core/units.h"
 #include "Core/qualbalance.h"
 #include "Elements/element.h"
+#include "Elements/node.h"
+#include "Elements/link.h"
 #include "Utilities/hashtable.h"
 #include "Utilities/graph.h"
 
@@ -54,6 +56,8 @@ class Network
     // Finds element counts by type and index by id name
     int           count(Element::ElementType eType);
     int           indexOf(Element::ElementType eType, const std::string& name);
+    int           count(Link::LinkType linkType);
+    int           count(Node::NodeType nodeType);
 
     // Gets an analysis option by type
     int           option(Options::IndexOption type);
@@ -120,6 +124,14 @@ class Network
     HashTable      patternTable;  //!< hash table for pattern ID names.
     HashTable      controlTable;  //!< hash table for control ID names.
     MemPool *      memPool;       //!< memory pool for network objects
+
+    // counts of network sub-types
+    int pipeCount;       //!< number of pipes
+    int pumpCount;       //!< number of pumps
+    int valveCount;      //!< number of valves
+    int junctionCount;   //!< number of valves
+    int tankCount;       //!< number of tanks
+    int reservoirCount;  //!< number of reservoirs
 };
 
 //-----------------------------------------------------------------------------

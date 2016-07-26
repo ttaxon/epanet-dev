@@ -58,19 +58,13 @@ void ReportWriter::writeSummary(string inpFileName)
     sout << "\n  Input Data File ............... "
          << Utilities::getFileName(inpFileName);
 
-    int nJuncs = 0;
-    int nResvs = 0;
-    int nTanks = 0;
+    int nJuncs = network->count(Node::JUNCTION);
+    int nResvs = network->count(Node::RESERVOIR);
+    int nTanks = network->count(Node::TANK);
     int nEmitters = 0;
     int nSources = 0;
     for (Node* node : network->nodes)
     {
-        switch (node->type())
-        {
-        case Node::JUNCTION : nJuncs++; break;
-        case Node::RESERVOIR: nResvs++; break;
-        case Node::TANK:      nTanks++; break;
-        }
         if ( node->hasEmitter() ) nEmitters++;
         if (node->qualSource) nSources++;
     }
@@ -79,18 +73,9 @@ void ReportWriter::writeSummary(string inpFileName)
     sout << "\n  Number of Reservoirs .......... " << nResvs;
     sout << "\n  Number of Tanks ............... " << nTanks;
 
-    int nPipes = 0;
-    int nPumps = 0;
-    int nValves = 0;
-    for (Link* link : network->links)
-    {
-        switch (link->type())
-        {
-        case Link::PIPE:  nPipes++;  break;
-        case Link::PUMP:  nPumps++;  break;
-        case Link::VALVE: nValves++; break;
-        }
-    }
+    int nPipes = network->count(Link::PIPE);
+    int nPumps = network->count(Link::PUMP);
+    int nValves = network->count(Link::VALVE);
 
     sout << "\n  Number of Pipes ............... " << nPipes;
     sout << "\n  Number of Pumps ............... " << nPumps;

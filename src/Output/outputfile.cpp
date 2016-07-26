@@ -81,7 +81,7 @@ int OutputFile::initWriter()
     // ... retrieve element counts
     nodeCount = network->count(Element::NODE);
     linkCount = network->count(Element::LINK);
-    pumpCount = findPumpCount(network);
+    pumpCount = network->count(Link::PUMP);
 
     // ... retrieve reporting time steps
     timePeriodCount = 0;
@@ -195,18 +195,6 @@ int OutputFile::writeNetworkResults()
     writeLinkResults();
     if ( fwriter.fail() ) return FileError::CANNOT_WRITE_TO_OUTPUT_FILE;
     return 0;
-}
-
-//-----------------------------------------------------------------------------
-
-int findPumpCount(Network* nw)
-{
-    int count = 0;
-    for (Link* link: nw->links)
-    {
-        if ( link->type() == Link::PUMP ) count++;
-    }
-    return count;
 }
 
 //-----------------------------------------------------------------------------

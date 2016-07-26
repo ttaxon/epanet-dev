@@ -32,7 +32,13 @@ Network::Network() :
     headLossModel(nullptr),
     demandModel(nullptr),
     leakageModel(nullptr),
-    qualModel(nullptr)
+    qualModel(nullptr),
+    pipeCount(0),
+    pumpCount(0),
+    valveCount(0),
+    junctionCount(0),
+    tankCount(0),
+    reservoirCount(0)
 {
     options.setDefaults();
     memPool = new MemPool();
@@ -103,6 +109,20 @@ int Network::count(Element::ElementType eType)
     return 0;
 }
 
+int Network::count(Link::LinkType linkType) {
+    switch(linkType) {
+    case Link::PIPE:  return pipeCount;
+    case Link::PUMP:  return pumpCount;
+    case Link::VALVE: return valveCount;
+    }
+}
+int Network::count(Node::NodeType nodeType) {
+    switch(nodeType) {
+    case Node::JUNCTION:  return junctionCount;
+    case Node::TANK:      return tankCount;
+    case Node::RESERVOIR: return reservoirCount;
+    }
+}
 //-----------------------------------------------------------------------------
 
 int Network::indexOf(Element::ElementType eType, const string& name)
@@ -217,6 +237,11 @@ bool Network::addElement(Element::ElementType element, int type, string name)
             node->index = nodes.size();
             nodeTable.insert(&(node->name), node);
             nodes.push_back(node);
+            switch(node->type()) {
+            case Node::JUNCTION:  junctionCount++; break;
+            case Node::TANK:      tankCount++; break;
+            case Node::RESERVOIR: reservoirCount++; break;
+            }
         }
 
         else if ( element == Element::LINK )
@@ -225,6 +250,11 @@ bool Network::addElement(Element::ElementType element, int type, string name)
             link->index = links.size();
             linkTable.insert(&(link->name), link);
             links.push_back(link);
+            switch(link->type()) {
+            case Link::PIPE:  pipeCount++; break;
+            case Link::PUMP:  pumpCount++; break;
+            case Link::VALVE: valveCount++; break;
+            }
         }
 
         else if ( element == Element::PATTERN )
